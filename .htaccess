@@ -1,0 +1,7 @@
+# Only the public/ folder may be visited from a browser.
+# This matters when the whole project is copied into Apache's web root (for example XAMPP's htdocs)
+# instead of pointing Apache straight at public/. Without it, storage/ (the database and uploads)
+# could be downloaded.
+<If "%{REQUEST_URI} !~ m#/public(/|$)#">
+    Require all denied
+</If>
