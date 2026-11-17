@@ -142,7 +142,7 @@ function send_file(array $file, bool $inline): never
 {
     $path = stored_path($file['stored_name']);
     $inline = $inline && $file['mime'] === 'application/pdf';
-    send_security_headers($inline);
+    send_security_headers($inline, $inline);
     header('Content-Type: ' . $file['mime']);
     header('Content-Length: ' . filesize($path));
     header('Content-Disposition: ' . content_disposition($file['original_name'], $inline));

@@ -54,9 +54,19 @@ function value(string $sql, array $params = []): mixed
 }
 
 /** Insert a row and return its new id. Table and column names only ever come from our own code. */
+function sql_identifier(string $name): string
+{
+    if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {
+        throw new InvalidArgumentException("Invalid SQL identifier: $name");
+    }
+    return $name;
+}
+
+/** Insert a row and return its new id. Table and column names only ever come from our own code. */
 function insert(string $table, array $row): int
 {
-    $cols = array_keys($row);
+    $table = sql_identifier($table);
+    $cols = array_map('sql_identifier', array_keys($row));
     $sql = "INSERT INTO $table (" . implode(', ', $cols) . ') VALUES (' . implode(', ', array_fill(0, count($cols), '?')) . ')';
     query($sql, array_values($row));
     return (int) db()->lastInsertId();
@@ -64,7 +74,9 @@ function insert(string $table, array $row): int
 
 function update(string $table, int $id, array $row): void
 {
-    $set = implode(', ', array_map(fn ($c) => "$c = ?", array_keys($row)));
+    $table = sql_identifier($table);
+    $cols = array_map('sql_identifier', array_keys($row));
+    $set = implode(', ', array_map(fn ($c) => "$c = ?", $cols));
     query("UPDATE $table SET $set WHERE id = ?", [...array_values($row), $id]);
 }
 

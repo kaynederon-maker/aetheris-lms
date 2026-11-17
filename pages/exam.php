@@ -102,7 +102,7 @@ if ($attempt && !$attempt['submitted_at']):
                     <div class="split"><p class="strong"><span class="faint tnum"><?= $i + 1 ?>.</span> <?= e($q['prompt']) ?></p><?= badge($q['points'] . ' points') ?></div>
                     <div class="stack-sm mt-4">
                         <?php if ($q['type'] === 'MCQ'): foreach ($options as $o => $text): ?>
-                            <label class="option"><input type="radio" name="q[<?= $q['id'] ?>]" value="<?= $o ?>" data-question="<?= $q['id'] ?>" <?= isset($answers[$q['id']]) && (int) $answers[$q['id']] === $o && is_int($answers[$q['id']]) ? 'checked' : '' ?>><?= e($text) ?></label>
+                            <label class="option"><input type="radio" name="q[<?= $q['id'] ?>]" value="<?= $o ?>" data-question="<?= $q['id'] ?>" <?= isset($answers[$q['id']]) && is_numeric($answers[$q['id']]) && (int) $answers[$q['id']] === $o ? 'checked' : '' ?>><?= e($text) ?></label>
                         <?php endforeach; else: ?>
                             <textarea class="input" style="min-height:180px" maxlength="20000" data-question="<?= $q['id'] ?>" aria-label="Your answer to question <?= $i + 1 ?>" placeholder="Write your answer"><?= e(is_string($answers[$q['id']] ?? null) ? $answers[$q['id']] : '') ?></textarea>
                         <?php endif; ?>

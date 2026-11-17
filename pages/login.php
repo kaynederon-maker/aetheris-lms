@@ -17,6 +17,7 @@ page_start('Sign in');
         </form>
     </div>
     <p class="center small muted mt-4">New student? <a class="strong" style="color:var(--accent-text)" href="<?= url('register') ?>">Create an account</a></p>
+    <?php if (getenv('APP_ENV') !== 'production'): ?>
     <details class="panel mt-8 small">
         <summary class="strong" style="cursor:pointer;min-height:32px">Demo accounts</summary>
         <dl class="stack-sm mt-2">
@@ -25,5 +26,6 @@ page_start('Sign in');
             <?php endforeach; ?>
         </dl>
     </details>
+    <?php endif; ?>
 </div>
 <?php page_end(); ?>
