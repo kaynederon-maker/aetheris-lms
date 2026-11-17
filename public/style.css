@@ -24,8 +24,10 @@
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --fast: 150ms;
   --slow: 240ms;
-  --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  /* Headings use Geist (sans-serif); all other text uses Geist Mono. */
+  --font-heading: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font-mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
 
 :root,
@@ -90,10 +92,11 @@
 html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 body {
   margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--font);
-  font-size: 0.9375rem; line-height: 1.55; min-height: 100dvh;
+  font-size: 0.875rem; line-height: 1.6; min-height: 100dvh; /* monospace runs wider, so a touch smaller */
   transition: background-color var(--slow) var(--ease), color var(--slow) var(--ease);
 }
-h1, h2, h3, h4 { margin: 0; line-height: 1.2; letter-spacing: -0.015em; font-weight: 650; text-wrap: balance; }
+h1, h2, h3, h4 { margin: 0; font-family: var(--font-heading); line-height: 1.2; letter-spacing: -0.015em; font-weight: 650; text-wrap: balance; }
+.brand, .stat-value, .big-score, .prose h2, .prose h3 { font-family: var(--font-heading); }
 h1 { font-size: clamp(1.75rem, 3vw, 2rem); letter-spacing: -0.022em; font-weight: 700; }
 h2 { font-size: 1.0625rem; }
 p { margin: 0; text-wrap: pretty; }
@@ -225,6 +228,9 @@ button.row { width: 100%; border: 0; background: none; text-align: left; cursor:
 .btn-sm { min-height: 36px; padding: 0 12px; font-size: 0.875rem; }
 .icon-btn { width: var(--hit); padding: 0; }
 .btn-sm.icon-btn { width: 36px; }
+.vote { border: 1px solid var(--line-strong); }
+.vote-on { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+.vote-on .icon path { fill: currentColor; fill-opacity: 0.25; } /* a filled thumb for "you liked this" */
 .btn-block { width: 100%; }
 .btn[data-armed] { background: var(--danger); color: #fff; }
 .inline-form { display: inline-flex; }

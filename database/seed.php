@@ -142,7 +142,8 @@ $thread = insert('forum_threads', ['course_id' => $ds, 'author_id' => $nadya, 't
 $p1 = insert('forum_posts', ['thread_id' => $thread, 'author_id' => $rina, 'verified' => 1, 'created_at' => now(-18 * H),
     'body' => "Swapping head and tail isn't enough: every node's `prev` and `next` have to be swapped, so reversal is **O(n)**. A 'reversed' flag gives you O(1) *logical* reversal if your code respects it."]);
 $p2 = insert('forum_posts', ['thread_id' => $thread, 'author_id' => $kayne, 'created_at' => now(-16 * H), 'body' => 'Some deque implementations use exactly that flag trick to avoid the copy.']);
-foreach ([[$kayne, $p1], [$shinji, $p1], [$nadya, $p2]] as [$u, $p]) {
+// Kayne (the account most people try first) starts with no likes, so his first like is easy to see.
+foreach ([[$shinji, $p1], [$joshua, $p1], [$nadya, $p2]] as [$u, $p]) {
     insert('forum_votes', ['user_id' => $u, 'post_id' => $p]);
 }
 insert('forum_threads', ['course_id' => $dm, 'author_id' => $joshua, 'title' => 'Strong vs weak induction: when does it matter?',

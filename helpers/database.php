@@ -53,7 +53,6 @@ function value(string $sql, array $params = []): mixed
     return query($sql, $params)->fetchColumn();
 }
 
-/** Insert a row and return its new id. Table and column names only ever come from our own code. */
 function sql_identifier(string $name): string
 {
     if (!preg_match('/^[a-zA-Z_][a-zA-Z0-9_]*$/', $name)) {

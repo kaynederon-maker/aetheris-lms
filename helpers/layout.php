@@ -258,7 +258,7 @@ function page_start(string $title, ?array $user = null, string $activePage = '')
         . '<meta name="viewport" content="width=device-width, initial-scale=1"><title>' . e($title) . ' · Aetheris</title>'
         . '<meta name="csrf-token" content="' . e(csrf_token()) . '"><meta name="signed-in" content="' . ($user ? '1' : '0') . '">'
         . '<link rel="icon" href="images/icon.svg"><link rel="preconnect" href="https://fonts.googleapis.com">'
-        . '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">'
+        . '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@500;600;700&family=Geist+Mono:wght@400;500;600&display=swap">'
         . '<link rel="stylesheet" href="style.css"><script src="app.js" defer></script></head><body>';
 
     $GLOBALS['public_layout'] = !$user;

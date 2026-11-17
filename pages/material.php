@@ -16,7 +16,7 @@ page_start($m['title'], $user, 'courses');
         <div class="split card-pad"><span><span class="strong"><?= e($m['original_name']) ?></span><br><span class="faint small"><?= e(bytes_label((int) $m['size'])) ?></span></span>
             <a class="btn btn-primary btn-sm" href="index.php?action=download&amp;id=<?= (int) $m['file_id'] ?>"><?= icon('download', 15) ?>Download</a></div>
         <?php if ($m['mime'] === 'application/pdf'): ?>
-            <iframe src="index.php?action=download&amp;id=<?= (int) $m['file_id'] ?>&amp;inline=1" title="<?= e($m['original_name']) ?>" sandbox="allow-scripts allow-same-origin" style="width:100%;height:75vh;border:0;border-top:1px solid var(--line);background:var(--surface-2)"></iframe>
+            <iframe src="index.php?action=download&amp;id=<?= (int) $m['file_id'] ?>&amp;inline=1" title="<?= e($m['original_name']) ?>" style="width:100%;height:75vh;border:0;border-top:1px solid var(--line);background:var(--surface-2)"></iframe>
         <?php endif; ?>
     </div>
 <?php endif; ?>
