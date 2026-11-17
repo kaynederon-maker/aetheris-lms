@@ -1,6 +1,8 @@
 <?php
-/**
- * CONSULTATION ACTIONS: students ask for a session; lecturers and support staff move the
+/*
+ * Consultation actions
+ * ====================
+ * Students ask for a session; lecturers and support staff move the
  * request through its steps. Which step may follow which is decided in helpers/rules.php.
  */
 

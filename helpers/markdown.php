@@ -1,6 +1,8 @@
 <?php
-/**
- * MARKDOWN: a small, safe Markdown renderer for notes, forum posts and announcements.
+/*
+ * Markdown
+ * ========
+ * A small, safe Markdown renderer for notes, forum posts and announcements.
  * Everything is HTML-escaped FIRST, then a few formatting rules are applied, so any HTML a user
  * types is shown as text and can never run.
  * Supports: ## headings, **bold**, *italic*, `code`, ``` code blocks, lists, > quotes,

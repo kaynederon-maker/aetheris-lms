@@ -1,6 +1,8 @@
 <?php
-/**
- * DISCUSSION ACTIONS: the course forum (threads, replies, votes, verified answers)
+/*
+ * Discussion actions
+ * ==================
+ * The course forum (threads, replies, votes, verified answers)
  * and the class group chat.
  */
 

@@ -1,6 +1,8 @@
 <?php
-/**
- * EXAM ACTIONS: lecturers write and grade exams; students start, autosave and submit.
+/*
+ * Exam actions
+ * ============
+ * Lecturers write and grade exams; students start, autosave and submit.
  * Students never receive the correct answers (see pages/exam.php).
  */
 

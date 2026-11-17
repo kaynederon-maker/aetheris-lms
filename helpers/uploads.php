@@ -1,6 +1,8 @@
 <?php
-/**
- * UPLOADS: checking, saving and sending files.
+/*
+ * Uploads
+ * =======
+ * Checking, saving and sending files.
  * Files are stored outside the public folder under random names, and are only sent out
  * after a permission check (see actions/files.php).
  */

@@ -1,6 +1,8 @@
 <?php
-/**
- * FILE DOWNLOADS: index.php?action=download&id=5
+/*
+ * File downloads
+ * ==============
+ * index.php?action=download&id=5
  * Course materials: anyone in the course. Submissions: the student who handed it in,
  * the course lecturer, or an admin. Everyone else gets "not found".
  */

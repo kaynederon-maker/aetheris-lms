@@ -1,6 +1,8 @@
 <?php
-/**
- * ASSIGNMENT ACTIONS: lecturers create and grade, students hand in files.
+/*
+ * Assignment actions
+ * ==================
+ * Lecturers create and grade, students hand in files.
  */
 
 function action_create_assignment(): void
