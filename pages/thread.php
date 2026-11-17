@@ -28,7 +28,9 @@ page_start($thread['title'], $user, 'courses');
             </div>
             <div class="prose mt-3"><?= markdown($p['body']) ?></div>
             <div class="cluster mt-4">
-                <?= button_form('vote', ['post_id' => $p['id']], icon('thumb', 15) . '<span class="tnum">' . $p['votes'] . '</span>', 'btn btn-sm ' . ($p['voted'] ? 'btn-secondary' : 'btn-ghost'), '', $p['voted'] ? 'Remove your upvote' : 'Upvote') ?>
+                <?php // Your own upvote is shown clearly (filled, coloured, "Upvoted") so it can't be mistaken for other people's votes. ?>
+                <?= button_form('vote', ['post_id' => $p['id']], icon('thumb', 15) . ($p['voted'] ? 'Upvoted' : 'Upvote') . ' <span class="tnum">' . $p['votes'] . '</span>',
+                    'btn btn-sm vote ' . ($p['voted'] ? 'vote-on' : 'btn-ghost'), '', $p['voted'] ? 'Remove your upvote' : 'Upvote this answer') ?>
                 <?php if (can_manage($role)): ?><?= button_form('verify_answer', ['post_id' => $p['id']], icon('verified', 15) . ($p['verified'] ? 'Remove verification' : 'Mark as verified'), 'btn btn-ghost btn-sm') ?><?php endif; ?>
             </div>
         </div>
