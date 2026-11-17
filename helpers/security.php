@@ -1,6 +1,8 @@
 <?php
 /**
- * SECURITY: escaping output, CSRF tokens, security headers, reading form input safely,
+ * security.php
+ *
+ * Security: escaping output, CSRF tokens, security headers, reading form input safely,
  * flash messages and redirects, rate limits and the audit log.
  */
 

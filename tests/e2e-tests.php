@@ -1,6 +1,8 @@
 <?php
 /**
- * END-TO-END TESTS: signs in as each role against a running server and tries both the normal
+ * e2e-tests.php
+ *
+ * End-to-end tests: signs in as each role against a running server and tries both the normal
  * flows and the things that must be refused (other people's files, late uploads, fake requests...).
  *
  * Run:  php database/seed.php

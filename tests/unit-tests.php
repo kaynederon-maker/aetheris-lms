@@ -1,6 +1,8 @@
 <?php
 /**
- * UNIT TESTS for the rules, upload checks and Markdown renderer. No server or database needed.
+ * unit-tests.php
+ *
+ * Unit tests for the rules, upload checks and Markdown renderer. No server or database needed.
  * Run:  php tests/unit-tests.php
  */
 
