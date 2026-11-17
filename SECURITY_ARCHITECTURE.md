@@ -22,7 +22,7 @@ The IP address comes from `REMOTE_ADDR`. `X-Forwarded-For` is only trusted when 
 
 Lecturers can't sign themselves up. An admin creates the account, and the server generates a random 14-character temporary password that is shown once. Until the lecturer chooses their own password, every page redirects to the profile and every action except changing the password and signing out is refused.
 
-The demo data script refuses to run when `APP_ENV=production`, because the demo passwords are in the README.
+The demo data script refuses to run when `APP_ENV=production`, because the demo passwords are in the README. In production the sign-in page also stops listing the demo accounts.
 
 ## Permissions
 
