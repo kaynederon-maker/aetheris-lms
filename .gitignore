@@ -1,0 +1,12 @@
+# Created while the app runs: the SQLite database and uploaded files.
+# Run `php database/seed.php` to make a fresh copy with demo data.
+storage/
+
+# Local secrets, if you add any
+.env
+
+# Editor and system clutter
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
