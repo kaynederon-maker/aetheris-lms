@@ -1,6 +1,6 @@
 <?php
 /**
- * ACCOUNT ACTIONS: sign in, sign out, register, profile, theme and password.
+ * Account actions: sign in, sign out, register, profile, theme and password.
  */
 
 // A real bcrypt hash of a throwaway string. When an email does not exist we still check the

@@ -1,6 +1,6 @@
 <?php
 /**
- * DEMO DATA: wipes the database and uploads, then fills them with a small example campus.
+ * Demo data: wipes the database and uploads, then fills them with a small example campus.
  * Run it with:  php database/seed.php
  * The demo passwords are public (see README), so this refuses to run when APP_ENV=production.
  */

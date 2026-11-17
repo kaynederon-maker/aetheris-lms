@@ -1,6 +1,6 @@
 <?php
 /**
- * RULES: the app's business rules in plain functions with no database access,
+ * Rules: the app's business rules in plain functions with no database access,
  * so they are easy to read and to test (see tests/unit-tests.php).
  * - join codes and the password policy
  * - the consultation (SOP) steps

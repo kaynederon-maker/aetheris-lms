@@ -1,6 +1,6 @@
 <?php
 /**
- * LOGIN & PERMISSIONS: sessions, the signed-in user, and who may see or change what.
+ * Login & permissions: sessions, the signed-in user, and who may see or change what.
  */
 
 const SESSION_IDLE_SECONDS = 8 * 3600;

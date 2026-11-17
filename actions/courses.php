@@ -1,6 +1,6 @@
 <?php
 /**
- * COURSE ACTIONS: joining a class, creating classes (admin), and lecturer tools for
+ * Course actions: joining a class, creating classes (admin), and lecturer tools for
  * materials and announcements.
  */
 

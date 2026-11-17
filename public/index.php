@@ -1,6 +1,6 @@
 <?php
 /**
- * FRONT DOOR: every request to the site comes through this one file.
+ * Front door: every request to the site comes through this one file.
  *
  *   index.php?page=courses          shows pages/courses.php
  *   a form with action=join_course   runs action_join_course() from actions/courses.php

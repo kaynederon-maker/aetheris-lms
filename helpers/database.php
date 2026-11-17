@@ -1,6 +1,6 @@
 <?php
 /**
- * DATABASE: one SQLite file in storage/. Every query in the app goes through these helpers,
+ * Database: one SQLite file in storage/. Every query in the app goes through these helpers,
  * which always use prepared statements (the values are sent separately from the SQL, so they
  * can never change the query).
  */

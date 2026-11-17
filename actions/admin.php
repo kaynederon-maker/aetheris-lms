@@ -1,6 +1,6 @@
 <?php
 /**
- * ADMIN ACTIONS: create lecturer accounts and switch accounts on or off.
+ * Admin actions: create lecturer accounts and switch accounts on or off.
  * (Creating classes and assigning lecturers lives in actions/courses.php.)
  */
 
