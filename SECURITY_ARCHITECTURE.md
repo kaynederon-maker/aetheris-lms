@@ -41,7 +41,7 @@ Other records follow from that:
 
 Each action reads exactly the fields it needs through `text_input()`, `int_input()`, `choice_input()` and `datetime_input()` in `helpers/security.php`. These check the length, range or allowed values. Anything else in the request is ignored, so fields like `role` or `active` can't be slipped in.
 
-Every database query uses prepared statements (`query()` in `helpers/database.php`), so a value can never change the SQL. Some inputs are forgiving where that's safe: join codes are trimmed, have dashes removed and are upper-cased before they are checked.
+Every database query uses prepared statements (`query()` in `helpers/database.php`), so a value can never change the SQL. On top of that, `insert()` and `update()` only accept plain table and column names (letters, digits and underscores). Some inputs are forgiving where that's safe: join codes are trimmed, have dashes removed and are upper-cased before they are checked.
 
 ## HTML from users
 
@@ -55,7 +55,6 @@ Markdown (materials, forum posts, announcements) is rendered by `helpers/markdow
 
 - a Content Security Policy that only allows scripts from this site (`script-src 'self'`, no inline scripts), plus `object-src 'none'`, `base-uri 'self'`, `form-action 'self'` and `frame-ancestors 'none'`
 - `X-Frame-Options: DENY`, except for PDFs opened inside the site's own viewer, which use `SAMEORIGIN`. Those PDF responses also get `script-src 'none'`, so a PDF with JavaScript in it can't run anything.
-- `insert()` and `update()` in `helpers/database.php` only accept plain table and column names (letters, digits and underscores), as a second line of defence behind prepared statements.
 - `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, a `Permissions-Policy` that switches off the camera, microphone, location and payments, `Cross-Origin-Opener-Policy: same-origin`, and HSTS over HTTPS
 
 Every form carries a CSRF token from the session, and `app.js` sends the same token in a header. `check_csrf()` compares them with `hash_equals()`. When the browser sends an `Origin` header, it also has to match the site, otherwise the request gets a 403.
