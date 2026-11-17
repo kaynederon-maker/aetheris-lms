@@ -1,5 +1,5 @@
 <?php
-/** PAGE: read one learning material. PDFs are shown in the page; everything can be downloaded. */
+// page: read one learning material. PDFs are shown in the page; everything can be downloaded.
 
 $user = require_login();
 $m = one('SELECT m.*, c.code, c.title AS course_title, f.original_name, f.size, f.mime FROM materials m JOIN courses c ON c.id = m.course_id

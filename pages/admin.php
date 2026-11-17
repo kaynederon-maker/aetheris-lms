@@ -1,5 +1,5 @@
 <?php
-/** PAGE (admin only): user accounts and classes, on two tabs. */
+// page (admin only): user accounts and classes, on two tabs.
 
 $admin = require_role('ADMIN');
 $tab = ($_GET['tab'] ?? '') === 'classes' ? 'classes' : 'users';

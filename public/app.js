@@ -1,8 +1,6 @@
-/*
- * Aetheris front-end behaviour. Plain JavaScript, no libraries.
- * Sections: helpers · menus & themes · sidebar · pop-up dialogs · confirm buttons · countdowns ·
- * upload box · rubric totals · consultation step tabs · landing preview · class chat · exam · exam builder
- */
+// Aetheris front-end behaviour. Plain JavaScript, no libraries.
+// Sections: helpers · menus & themes · sidebar · pop-up dialogs · confirm buttons · countdowns ·
+// upload box · rubric totals · consultation step tabs · landing preview · class chat · exam · exam builder
 
 /* ---------- helpers ---------- */
 const $ = (sel, root = document) => root.querySelector(sel);

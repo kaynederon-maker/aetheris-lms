@@ -1,5 +1,5 @@
 <?php
-/** PAGE: sign in. */
+// page: sign in.
 
 if (current_user()) {
     redirect(url('dashboard'));

@@ -1,5 +1,5 @@
 <?php
-/** PAGE: shown when a page does not exist, or the user has no access to it. */
+// page: shown when a page does not exist, or the user has no access to it.
 
 page_start('Not found', current_user());
 ?>

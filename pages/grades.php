@@ -1,8 +1,6 @@
 <?php
-/**
- * PAGE: a student's own grades. Every query uses the signed-in student's id, and the page takes no
- * id from the address bar, so there is nothing to change to see someone else's results.
- */
+// page: a student's own grades. Every query uses the signed-in student's id, and the page takes no
+// id from the address bar, so there is nothing to change to see someone else's results.
 
 $user = require_role('STUDENT');
 $uid = (int) $user['id'];

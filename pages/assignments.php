@@ -1,5 +1,5 @@
 <?php
-/** PAGE: all assignments across the user's classes. Students see what is due; lecturers see what needs grading. */
+// page: all assignments across the user's classes. Students see what is due; lecturers see what needs grading.
 
 $user = require_role('STUDENT', 'LECTURER');
 $uid = (int) $user['id'];

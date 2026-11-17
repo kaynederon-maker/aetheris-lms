@@ -1,9 +1,7 @@
 <?php
-/**
- * ICONS: the line icons used across the site (shapes copied from Lucide, ISC licence).
- * Usage: <?= icon('book') ?>  or  <?= icon('book', 22) ?>
- * Generated once from lucide-react 0.577.0; edit by hand if you need another icon.
- */
+// icons: the line icons used across the site (shapes copied from Lucide, ISC licence).
+// Usage: icon('book'), or icon('book', 22) for a bigger one.
+// Generated once from lucide-react 0.577.0; edit by hand if you need another icon.
 
 const ICONS = [
     'dashboard' => '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',

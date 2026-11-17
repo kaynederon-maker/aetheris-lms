@@ -1,5 +1,5 @@
 <?php
-/** PAGE: the student's classes (with the join form) or the classes a lecturer teaches. Admins manage classes on the admin page. */
+// page: the student's classes (with the join form) or the classes a lecturer teaches. Admins manage classes on the admin page.
 
 $user = require_login();
 if ($user['role'] === 'ADMIN') {

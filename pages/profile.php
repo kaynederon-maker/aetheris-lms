@@ -1,5 +1,5 @@
 <?php
-/** PAGE: change your name, avatar, colour theme and password. */
+// page: change your name, avatar, colour theme and password.
 
 $user = require_login();
 page_start('Profile', $user, '');

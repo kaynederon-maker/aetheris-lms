@@ -1,9 +1,7 @@
 <?php
-/**
- * PAGE: one assignment.
- * Students: instructions, upload box, and their grade once it is marked.
- * Lecturers and admins: who handed in, downloads, and the grading form.
- */
+// page: one assignment.
+// Students: instructions, upload box, and their grade once it is marked.
+// Lecturers and admins: who handed in, downloads, and the grading form.
 
 $user = require_login();
 $a = one('SELECT a.*, c.code, c.title AS course_title FROM assignments a JOIN courses c ON c.id = a.course_id WHERE a.id = ?', [(int) ($_GET['id'] ?? 0)]) ?? fail('Not found', 404);

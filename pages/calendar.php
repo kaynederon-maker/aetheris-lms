@@ -1,5 +1,5 @@
 <?php
-/** PAGE: one month of deadlines, exam windows and confirmed consultations. A grid on big screens, a list on phones. */
+// page: one month of deadlines, exam windows and confirmed consultations. A grid on big screens, a list on phones.
 
 $user = require_login();
 $uid = (int) $user['id'];

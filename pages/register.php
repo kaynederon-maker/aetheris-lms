@@ -1,5 +1,5 @@
 <?php
-/** PAGE: student sign-up. Lecturer accounts are made by an admin instead. */
+// page: student sign-up. Lecturer accounts are made by an admin instead.
 
 if (current_user()) {
     redirect(url('dashboard'));

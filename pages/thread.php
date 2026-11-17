@@ -1,5 +1,5 @@
 <?php
-/** PAGE: one forum question with its answers. The verified answer comes first, then the most upvoted. */
+// page: one forum question with its answers. The verified answer comes first, then the most upvoted.
 
 $user = require_login();
 $thread = one('SELECT t.*, u.name, u.avatar FROM forum_threads t JOIN users u ON u.id = t.author_id WHERE t.id = ?', [(int) ($_GET['id'] ?? 0)]) ?? fail('Not found', 404);

@@ -1,10 +1,8 @@
 <?php
-/**
- * PAGE: one exam.
- * Students: rules and a Start button, then the timed exam (answers save on their own, see app.js),
- * then the result. The correct answers are never sent to students.
- * Lecturers and admins: everyone's attempts, essay grading and the answer key.
- */
+// page: one exam.
+// Students: rules and a Start button, then the timed exam (answers save on their own, see app.js),
+// then the result. The correct answers are never sent to students.
+// Lecturers and admins: everyone's attempts, essay grading and the answer key.
 
 $user = require_login();
 $exam = one('SELECT e.*, c.code FROM exams e JOIN courses c ON c.id = e.course_id WHERE e.id = ?', [(int) ($_GET['id'] ?? 0)]) ?? fail('Not found', 404);

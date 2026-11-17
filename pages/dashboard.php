@@ -1,5 +1,5 @@
 <?php
-/** PAGE: the first screen after signing in. Students, lecturers and admins each see their own version. */
+// page: the first screen after signing in. Students, lecturers and admins each see their own version.
 
 $user = require_login();
 $hour = (int) local_date(null)->format('G');

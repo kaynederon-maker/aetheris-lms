@@ -1,13 +1,11 @@
 <?php
-/**
- * PAGE: one course, with tabs.
- *   overview    materials and announcements
- *   assignments list (+ create form for the lecturer)
- *   exams       list (+ link to write a new exam)
- *   forum       questions and answers
- *   chat        the class group chat (live, see app.js)
- *   roster      students and their progress (lecturer and admin only)
- */
+// page: one course, with tabs.
+//   overview    materials and announcements
+//   assignments list (+ create form for the lecturer)
+//   exams       list (+ link to write a new exam)
+//   forum       questions and answers
+//   chat        the class group chat (live, see app.js)
+//   roster      students and their progress (lecturer and admin only)
 
 $user = require_login();
 $courseId = (int) ($_GET['id'] ?? 0);

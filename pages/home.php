@@ -1,5 +1,5 @@
 <?php
-/** PAGE: the public landing page, with a small working preview of the student dashboard. */
+// page: the public landing page, with a small working preview of the student dashboard.
 
 if (current_user()) {
     redirect(url('dashboard'));

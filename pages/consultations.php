@@ -1,9 +1,7 @@
 <?php
-/**
- * PAGE: consultation requests.
- * Students see their own requests and can make a new one. Lecturers see the requests sent to them.
- * Admins see the support desk queue.
- */
+// page: consultation requests.
+// Students see their own requests and can make a new one. Lecturers see the requests sent to them.
+// Admins see the support desk queue.
 
 $user = require_login();
 $uid = (int) $user['id'];

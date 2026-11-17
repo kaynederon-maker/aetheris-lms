@@ -1,5 +1,5 @@
 <?php
-/** PAGE (admin only): the latest 200 security events. */
+// page (admin only): the latest 200 security events.
 
 $admin = require_role('ADMIN');
 $logs = all('SELECT l.*, u.name AS actor FROM audit_log l LEFT JOIN users u ON u.id = l.actor_id ORDER BY l.id DESC LIMIT 200');

@@ -1,5 +1,5 @@
 <?php
-/** PAGE: a lecturer writes a new exam. "Add question" copies the <template> below (see app.js). */
+// page: a lecturer writes a new exam. "Add question" copies the <template> below (see app.js).
 
 $user = require_role('LECTURER', 'ADMIN');
 $courseId = (int) ($_GET['course'] ?? 0);

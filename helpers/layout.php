@@ -1,8 +1,6 @@
 <?php
-/**
- * LAYOUT: the page frame (sidebar, top bar, footer) and small reusable pieces of HTML
- * such as badges, avatars, countdowns and the consultation progress chart.
- */
+// layout: the page frame (sidebar, top bar, footer) and small reusable pieces of HTML
+// such as badges, avatars, countdowns and the consultation progress chart.
 
 const APP_TIMEZONE = 'Asia/Jakarta';
 

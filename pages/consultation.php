@@ -1,8 +1,6 @@
 <?php
-/**
- * PAGE: one consultation request, with its progress chart and the next steps.
- * When the lecturer or support staff opens a new request, it is marked as "Read" automatically.
- */
+// page: one consultation request, with its progress chart and the next steps.
+// When the lecturer or support staff opens a new request, it is marked as "Read" automatically.
 
 $user = require_login();
 [$c, $side] = consultation_access((int) ($_GET['id'] ?? 0), $user);
