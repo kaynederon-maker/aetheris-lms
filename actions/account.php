@@ -33,7 +33,7 @@ function action_login(): void
     clear_rate_limit($pairKey);
     log_in($user);
     audit('login', null, (int) $user['id']);
-    done('Welcome back, ' . explode(' ', $user['name'])[0] . '.', url('dashboard'), ['role' => $user['role']]);
+    done('Welcome back, ' . $user['name'] . '.', url('dashboard'), ['role' => $user['role']]);
 }
 
 /** Public sign-up always creates a student. Lecturer accounts come from an admin. */

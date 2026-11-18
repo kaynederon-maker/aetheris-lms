@@ -3,7 +3,7 @@
 
 $user = require_login();
 $hour = (int) local_date(null)->format('G');
-$greeting = ($hour < 12 ? 'Good morning' : ($hour < 18 ? 'Good afternoon' : 'Good evening')) . ', ' . explode(' ', $user['name'])[0];
+$greeting = ($hour < 12 ? 'Good morning' : ($hour < 18 ? 'Good afternoon' : 'Good evening')) . ', ' . $user['name'];
 $today = local_date(null)->format('l j F');
 $uid = (int) $user['id'];
 
