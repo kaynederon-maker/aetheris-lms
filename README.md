@@ -2,7 +2,7 @@
 
 Aetheris is a learning management system for a university setting. Students join classes, read course materials, hand in assignments and take timed exams. Lecturers run their courses and grade work, and admins manage accounts and classes. The visual style borrows from Apple's interface guidelines, and the server checks permissions on every request.
 
-It's written in plain PHP with an SQLite database: no framework, no Composer packages and no JavaScript build step. If you have PHP 8.1 or newer, you can run it.
+Stack: PHP 8.2, HTML, CSS and plain JavaScript, with a MySQL database, served by Apache and packaged with Docker Compose. There's no framework, no Composer packages, no Node and no build step.
 
 ## Team
 
@@ -17,20 +17,27 @@ Our names are also in the site footer and in the About & Creators window.
 
 ## Running it
 
-You need PHP 8.1+ with the `pdo_sqlite` and `fileinfo` extensions. XAMPP includes both.
+### With Docker (recommended)
+
+You only need Docker Desktop. The `web` container runs PHP 8.2 with Apache, and the `db` container runs MySQL 8.
 
 ```bash
 git clone https://github.com/kaynederon-maker/aetheris-lms.git
 cd aetheris-lms
-php database/seed.php              # creates the database with demo data
-php -S 127.0.0.1:8000 -t public    # starts a local web server
+cp .env.example .env                              # then change the passwords in .env
+docker compose up -d --build                      # builds and starts Apache + PHP and MySQL
+docker compose exec web php database/seed.php     # loads the demo data
 ```
 
-Then open http://127.0.0.1:8000.
+Then open http://localhost:8080. MySQL creates the tables from `database/schema.sql` on its first start. Its port isn't published, so only the web container can reach it. `docker compose down` stops everything, and `docker compose down -v` also deletes the database and uploads.
 
-To use XAMPP instead, copy the folder into `htdocs` and open http://localhost/aetheris-lms/public/. The `.htaccess` file in the project root blocks everything outside `public/`, so the database and uploads can't be downloaded even though the whole folder is inside `htdocs`.
+### With XAMPP
 
-To start over with fresh demo data at any time, run `php database/seed.php` again.
+Start Apache and MySQL in the XAMPP control panel, copy the folder into `htdocs`, then run `php database/seed.php` from the project folder. It connects as XAMPP's default `root` user with no password, and creates the `aetheris` database for you. Open http://localhost/aetheris-lms/public/. The `.htaccess` file in the project root blocks everything outside `public/`, so uploads and code can't be downloaded even though the whole folder is inside `htdocs`.
+
+To use other database settings, set the environment variables `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER` and `DB_PASS`.
+
+To start over with fresh demo data at any time, run the seed command again.
 
 ## How the folders are organised
 
@@ -44,7 +51,8 @@ Each folder is named after what its files do:
 | `helpers/` | Shared building blocks: the database, login and permissions, security, uploads, the page layout, Markdown, icons and the app's rules. |
 | `database/` | `schema.sql` (the tables) and `seed.php` (the demo data). |
 | `tests/` | `unit-tests.php` and `e2e-tests.php`. |
-| `storage/` | Created when the app first runs. It holds the SQLite file and uploaded files, and it isn't in Git. |
+| `storage/` | Created when the app first runs. It holds uploaded files, and it isn't in Git. |
+| `Dockerfile`, `docker-compose.yml` | The PHP + Apache image and the two containers (web and MySQL). |
 
 How a request flows: every visit goes to `public/index.php`. That file loads the helpers, then either shows a page from `pages/` (`index.php?page=courses`) or runs a function from `actions/` when a form is posted. Only names on the two lists at the top of `index.php` can be loaded.
 

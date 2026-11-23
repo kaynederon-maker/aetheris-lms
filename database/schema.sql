@@ -1,210 +1,238 @@
--- Aetheris database structure (SQLite).
--- Runs automatically the first time the app opens the database (see helpers/database.php).
+-- Aetheris database structure (MySQL 8 / MariaDB 10.4+).
+-- Loaded automatically: by the MySQL container on its first start (docker-compose.yml), or by
+-- helpers/database.php the first time the app finds no tables. database/seed.php also reloads it.
 -- All dates are stored in UTC as 'YYYY-MM-DD HH:MM:SS' and shown in Asia/Jakarta time.
 
-PRAGMA foreign_keys = ON;
-
 CREATE TABLE users (
-    id                   INTEGER PRIMARY KEY AUTOINCREMENT,
-    email                TEXT NOT NULL UNIQUE,
-    name                 TEXT NOT NULL,
-    password_hash        TEXT NOT NULL,
-    role                 TEXT NOT NULL CHECK (role IN ('STUDENT', 'LECTURER', 'ADMIN')),
-    student_number       TEXT,
-    active               INTEGER NOT NULL DEFAULT 1,
-    must_change_password INTEGER NOT NULL DEFAULT 0,
-    theme                TEXT NOT NULL DEFAULT 'apple-light',
-    avatar               TEXT,                       -- a1..a6, or NULL for initials
-    session_version      INTEGER NOT NULL DEFAULT 1, -- bumping it logs the user out everywhere
-    created_at           TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    id                   INT AUTO_INCREMENT PRIMARY KEY,
+    email                VARCHAR(255) NOT NULL UNIQUE,
+    name                 VARCHAR(255) NOT NULL,
+    password_hash        VARCHAR(255) NOT NULL,
+    role                 VARCHAR(10) NOT NULL CHECK (role IN ('STUDENT', 'LECTURER', 'ADMIN')),
+    student_number       VARCHAR(20),
+    active               TINYINT(1) NOT NULL DEFAULT 1,
+    must_change_password TINYINT(1) NOT NULL DEFAULT 0,
+    theme                VARCHAR(20) NOT NULL DEFAULT 'apple-light',
+    avatar               VARCHAR(10),                -- a1..a6, or NULL for initials
+    session_version      INT NOT NULL DEFAULT 1,     -- raising it logs the user out everywhere
+    created_at           DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE courses (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    code        TEXT NOT NULL UNIQUE,                 -- e.g. COMP6100
-    title       TEXT NOT NULL,
-    description TEXT NOT NULL DEFAULT '',
-    join_code   TEXT NOT NULL UNIQUE,                 -- 8 characters, shown as ABCD-2345
-    banner      TEXT,                                 -- file name in public/images/banners
-    lecturer_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    created_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    code        VARCHAR(8) NOT NULL UNIQUE,          -- e.g. COMP6100
+    title       VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    join_code   VARCHAR(8) NOT NULL UNIQUE,          -- 8 characters, shown as ABCD-2345
+    banner      VARCHAR(100),                        -- file name in public/images/banners
+    lecturer_id INT NULL,
+    created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (lecturer_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE enrollments (
-    user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    course_id  INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id, course_id)
-);
+    user_id    INT NOT NULL,
+    course_id  INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, course_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Every uploaded file. The real file lives in storage/uploads/<stored_name>.
 CREATE TABLE files (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    stored_name   TEXT NOT NULL UNIQUE,               -- 32 random hex characters
-    original_name TEXT NOT NULL,
-    mime          TEXT NOT NULL,
-    size          INTEGER NOT NULL,
-    uploaded_by   INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    created_at    TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    stored_name   VARCHAR(32) NOT NULL UNIQUE,       -- 32 random hex characters
+    original_name VARCHAR(255) NOT NULL,
+    mime          VARCHAR(120) NOT NULL,
+    size          INT NOT NULL,
+    uploaded_by   INT NOT NULL,
+    created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE materials (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    course_id  INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
-    title      TEXT NOT NULL,
-    body       TEXT,                                  -- Markdown notes
-    file_id    INTEGER REFERENCES files(id) ON DELETE SET NULL,
-    position   INTEGER NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    course_id  INT NOT NULL,
+    title      VARCHAR(255) NOT NULL,
+    body       MEDIUMTEXT,                           -- Markdown notes
+    file_id    INT NULL,
+    position   INT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (file_id) REFERENCES files(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE announcements (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    course_id  INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
-    title      TEXT NOT NULL,
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    course_id  INT NOT NULL,
+    title      VARCHAR(255) NOT NULL,
     body       TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE assignments (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    course_id     INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
-    title         TEXT NOT NULL,
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    course_id     INT NOT NULL,
+    title         VARCHAR(255) NOT NULL,
     description   TEXT NOT NULL,
-    due_at        TEXT NOT NULL,
-    allowed_types TEXT NOT NULL,                      -- e.g. 'pdf,docx,zip,code'
-    rubric        TEXT NOT NULL DEFAULT '[]',         -- JSON: [{"criterion":"Correctness","max":50}, ...]
-    created_at    TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    due_at        DATETIME NOT NULL,
+    allowed_types VARCHAR(100) NOT NULL,             -- e.g. 'pdf,docx,zip,code'
+    rubric        TEXT NOT NULL DEFAULT ('[]'),      -- JSON: [{"criterion":"Correctness","max":50}, ...]
+    created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE submissions (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    assignment_id INTEGER NOT NULL REFERENCES assignments(id) ON DELETE CASCADE,
-    student_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    file_id       INTEGER NOT NULL REFERENCES files(id),
-    submitted_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    score         INTEGER,                            -- 0-100, NULL until graded
-    rubric_scores TEXT,                               -- JSON list matching the rubric
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    assignment_id INT NOT NULL,
+    student_id    INT NOT NULL,
+    file_id       INT NOT NULL,
+    submitted_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    score         INT NULL,                          -- 0-100, NULL until graded
+    rubric_scores TEXT,                              -- JSON list matching the rubric
     feedback      TEXT,
-    graded_at     TEXT,
-    UNIQUE (assignment_id, student_id)
-);
+    graded_at     DATETIME NULL,
+    UNIQUE KEY one_per_student (assignment_id, student_id),
+    FOREIGN KEY (assignment_id) REFERENCES assignments(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (file_id) REFERENCES files(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE exams (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    course_id    INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
-    title        TEXT NOT NULL,
-    description  TEXT NOT NULL DEFAULT '',
-    opens_at     TEXT NOT NULL,
-    closes_at    TEXT NOT NULL,
-    duration_min INTEGER NOT NULL,
-    created_at   TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    course_id    INT NOT NULL,
+    title        VARCHAR(255) NOT NULL,
+    description  TEXT NOT NULL,
+    opens_at     DATETIME NOT NULL,
+    closes_at    DATETIME NOT NULL,
+    duration_min INT NOT NULL,
+    created_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE questions (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    exam_id       INTEGER NOT NULL REFERENCES exams(id) ON DELETE CASCADE,
-    type          TEXT NOT NULL CHECK (type IN ('MCQ', 'ESSAY')),
+    id            INT AUTO_INCREMENT PRIMARY KEY,
+    exam_id       INT NOT NULL,
+    type          VARCHAR(5) NOT NULL CHECK (type IN ('MCQ', 'ESSAY')),
     prompt        TEXT NOT NULL,
-    options       TEXT NOT NULL DEFAULT '[]',         -- JSON list of choices (MCQ only)
-    correct_index INTEGER,                            -- never sent to students
-    points        INTEGER NOT NULL,
-    position      INTEGER NOT NULL
-);
+    options       TEXT NOT NULL DEFAULT ('[]'),      -- JSON list of choices (MCQ only)
+    correct_index INT NULL,                          -- never sent to students
+    points        INT NOT NULL,
+    position      INT NOT NULL,
+    FOREIGN KEY (exam_id) REFERENCES exams(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE exam_attempts (
-    id             INTEGER PRIMARY KEY AUTOINCREMENT,
-    exam_id        INTEGER NOT NULL REFERENCES exams(id) ON DELETE CASCADE,
-    student_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    question_order TEXT NOT NULL,                     -- JSON list of question ids, shuffled per student
-    answers        TEXT NOT NULL DEFAULT '{}',        -- JSON: {"questionId": answer}
-    started_at     TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deadline_at    TEXT NOT NULL,
-    submitted_at   TEXT,
-    auto_submitted INTEGER NOT NULL DEFAULT 0,
-    tab_switches   INTEGER NOT NULL DEFAULT 0,
-    mcq_points     INTEGER,
-    essay_points   INTEGER,
-    score          INTEGER,                           -- 0-100, NULL while essays wait for grading
+    id             INT AUTO_INCREMENT PRIMARY KEY,
+    exam_id        INT NOT NULL,
+    student_id     INT NOT NULL,
+    question_order TEXT NOT NULL,                    -- JSON list of question ids, shuffled per student
+    answers        MEDIUMTEXT NOT NULL DEFAULT ('{}'), -- JSON: {"questionId": answer}
+    started_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deadline_at    DATETIME NOT NULL,
+    submitted_at   DATETIME NULL,
+    auto_submitted TINYINT(1) NOT NULL DEFAULT 0,
+    tab_switches   INT NOT NULL DEFAULT 0,
+    mcq_points     INT NULL,
+    essay_points   INT NULL,
+    score          INT NULL,                         -- 0-100, NULL while essays wait for marking
     feedback       TEXT,
-    UNIQUE (exam_id, student_id)
-);
+    UNIQUE KEY one_attempt (exam_id, student_id),
+    FOREIGN KEY (exam_id) REFERENCES exams(id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE forum_threads (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    course_id  INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
-    author_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    title      TEXT NOT NULL,
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    course_id  INT NOT NULL,
+    author_id  INT NOT NULL,
+    title      VARCHAR(255) NOT NULL,
     body       TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE forum_posts (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    thread_id  INTEGER NOT NULL REFERENCES forum_threads(id) ON DELETE CASCADE,
-    author_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id  INT NOT NULL,
+    author_id  INT NOT NULL,
     body       TEXT NOT NULL,
-    verified   INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    verified   TINYINT(1) NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES forum_threads(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE forum_votes (
-    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    post_id INTEGER NOT NULL REFERENCES forum_posts(id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, post_id)
-);
+    user_id INT NOT NULL,
+    post_id INT NOT NULL,
+    PRIMARY KEY (user_id, post_id),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES forum_posts(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE chat_messages (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    course_id  INTEGER NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
-    author_id  INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    course_id  INT NOT NULL,
+    author_id  INT NOT NULL,
     body       TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-CREATE INDEX chat_by_course ON chat_messages (course_id, id);
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    KEY chat_by_course (course_id, id),
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE consultations (
-    id             INTEGER PRIMARY KEY AUTOINCREMENT,
-    student_id     INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    recipient_type TEXT NOT NULL CHECK (recipient_type IN ('LECTURER', 'SUPPORT')),
-    recipient_id   INTEGER REFERENCES users(id) ON DELETE SET NULL, -- NULL = support desk (admins)
-    course_id      INTEGER REFERENCES courses(id) ON DELETE SET NULL,
-    category       TEXT NOT NULL,
-    medium         TEXT NOT NULL CHECK (medium IN ('VIDEO', 'VOICE', 'CHAT')),
-    subject        TEXT NOT NULL,
+    id             INT AUTO_INCREMENT PRIMARY KEY,
+    student_id     INT NOT NULL,
+    recipient_type VARCHAR(10) NOT NULL CHECK (recipient_type IN ('LECTURER', 'SUPPORT')),
+    recipient_id   INT NULL,                         -- NULL = support desk (admins)
+    course_id      INT NULL,
+    category       VARCHAR(40) NOT NULL,
+    medium         VARCHAR(10) NOT NULL CHECK (medium IN ('VIDEO', 'VOICE', 'CHAT')),
+    subject        VARCHAR(255) NOT NULL,
     details        TEXT NOT NULL,
-    preferred_at   TEXT,
-    status         TEXT NOT NULL DEFAULT 'DELIVERED',
-    scheduled_at   TEXT,
-    session_link   TEXT,
+    preferred_at   DATETIME NULL,
+    status         VARCHAR(30) NOT NULL DEFAULT 'DELIVERED',
+    scheduled_at   DATETIME NULL,
+    session_link   VARCHAR(300),
     decline_reason TEXT,
     summary        TEXT,
-    created_at     TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (recipient_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- One row per step a consultation goes through, so the progress chart can show timestamps.
+-- One row per step a consultation goes through, so the progress chart can show times.
 CREATE TABLE consultation_events (
-    id              INTEGER PRIMARY KEY AUTOINCREMENT,
-    consultation_id INTEGER NOT NULL REFERENCES consultations(id) ON DELETE CASCADE,
-    status          TEXT NOT NULL,
+    id              INT AUTO_INCREMENT PRIMARY KEY,
+    consultation_id INT NOT NULL,
+    status          VARCHAR(30) NOT NULL,
     note            TEXT,
-    actor_id        INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    created_at      TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    actor_id        INT NULL,
+    created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (consultation_id) REFERENCES consultations(id) ON DELETE CASCADE,
+    FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE audit_log (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    actor_id   INTEGER REFERENCES users(id) ON DELETE SET NULL,
-    action     TEXT NOT NULL,
-    target     TEXT,
-    ip         TEXT,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+    id         INT AUTO_INCREMENT PRIMARY KEY,
+    actor_id   INT NULL,
+    action     VARCHAR(60) NOT NULL,
+    target     VARCHAR(255),
+    ip         VARCHAR(45),
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (actor_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Counters for rate limiting (login attempts, uploads, chat, ...).
+-- Counters for rate limiting (sign-in attempts, uploads, chat, ...).
 CREATE TABLE rate_limits (
-    key      TEXT PRIMARY KEY,
-    count    INTEGER NOT NULL,
-    reset_at INTEGER NOT NULL                          -- Unix timestamp
-);
+    rate_key VARCHAR(500) PRIMARY KEY,               -- e.g. "login:email:ip"
+    count    INT NOT NULL,
+    reset_at INT NOT NULL                            -- Unix timestamp
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

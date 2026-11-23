@@ -1,4 +1,4 @@
-# Created while the app runs: the SQLite database and uploaded files.
+# Created while the app runs: uploaded files.
 # Run `php database/seed.php` to make a fresh copy with demo data.
 storage/
 

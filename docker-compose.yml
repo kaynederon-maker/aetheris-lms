@@ -1,0 +1,46 @@
+# Start everything:   docker compose up -d --build
+# Load demo data:     docker compose exec web php database/seed.php
+# Open the site:      http://localhost:8080
+# Stop:               docker compose down        (add -v to also delete the database and uploads)
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_NAME: aetheris
+      DB_USER: aetheris
+      DB_PASS: ${DB_PASS:-aetheris_dev_password}
+      APP_ENV: ${APP_ENV:-development}
+    volumes:
+      - uploads:/var/www/html/storage/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: mysql:8.0
+    command: --default-time-zone=+00:00
+    environment:
+      MYSQL_DATABASE: aetheris
+      MYSQL_USER: aetheris
+      MYSQL_PASSWORD: ${DB_PASS:-aetheris_dev_password}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-change_this_root_password}
+    volumes:
+      - db-data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro # creates the tables on first start
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+    # No "ports:" on purpose: MySQL is only reachable from the web container, not from outside.
+
+volumes:
+  db-data:
+  uploads:

@@ -16,12 +16,17 @@ if (getenv('APP_ENV') === 'production' && getenv('ALLOW_DEMO_SEED') !== '1') {
     exit(1);
 }
 
-// Start from nothing.
-@unlink(DB_FILE);
+// Start from nothing: drop every table, recreate them from schema.sql, and empty the uploads folder.
+$tables = db()->query('SHOW TABLES')->fetchAll(PDO::FETCH_COLUMN);
+db()->exec('SET FOREIGN_KEY_CHECKS = 0');
+foreach ($tables as $table) {
+    db()->exec('DROP TABLE `' . sql_identifier($table) . '`');
+}
+db()->exec('SET FOREIGN_KEY_CHECKS = 1');
+db()->exec(file_get_contents(ROOT . '/database/schema.sql'));
 foreach (glob(UPLOAD_DIR . '/*') ?: [] as $file) {
     unlink($file);
 }
-db(); // creates the tables from schema.sql
 
 const H = 3600;
 const D = 86400;

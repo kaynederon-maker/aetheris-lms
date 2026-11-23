@@ -221,13 +221,13 @@ function old(string $key, string $default = ''): string
 function rate_limit(string $key, int $limit, int $windowSeconds): bool
 {
     $now = time();
-    $row = one('SELECT count, reset_at FROM rate_limits WHERE key = ?', [$key]);
+    $row = one('SELECT count, reset_at FROM rate_limits WHERE rate_key = ?', [$key]);
     if (!$row || $row['reset_at'] <= $now) {
-        query('INSERT INTO rate_limits (key, count, reset_at) VALUES (?, 1, ?)
-               ON CONFLICT (key) DO UPDATE SET count = 1, reset_at = excluded.reset_at', [$key, $now + $windowSeconds]);
+        query('INSERT INTO rate_limits (rate_key, count, reset_at) VALUES (?, 1, ?)
+               ON DUPLICATE KEY UPDATE count = 1, reset_at = ?', [$key, $now + $windowSeconds, $now + $windowSeconds]);
         return true;
     }
-    query('UPDATE rate_limits SET count = count + 1 WHERE key = ?', [$key]);
+    query('UPDATE rate_limits SET count = count + 1 WHERE rate_key = ?', [$key]);
     return $row['count'] + 1 <= $limit;
 }
 
@@ -241,7 +241,7 @@ function limit_or_fail(string $key, int $limit, int $windowSeconds, string $mess
 
 function clear_rate_limit(string $key): void
 {
-    query('DELETE FROM rate_limits WHERE key = ?', [$key]);
+    query('DELETE FROM rate_limits WHERE rate_key = ?', [$key]);
 }
 
 /** Behind your own reverse proxy set TRUST_PROXY=1; otherwise the visitor's real address is used. */
