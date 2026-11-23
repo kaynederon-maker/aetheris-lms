@@ -153,11 +153,19 @@ Buttons and inputs are at least 44px tall, inputs use 16px text on phones so iOS
 ## Tests
 
 ```bash
-php tests/unit-tests.php                 # 38 checks, no server needed
+php tests/unit-tests.php                 # 40 checks, no server needed
 php database/seed.php
 php -S 127.0.0.1:8000 -t public          # in a second terminal
-php tests/e2e-tests.php                  # 63 checks against the running site
+php tests/e2e-tests.php                  # 66 checks against the running site
 php database/seed.php                    # put the demo data back afterwards
+```
+
+With Docker, run them inside the web container:
+
+```bash
+docker compose exec web php tests/unit-tests.php
+docker compose exec -e BASE_URL=http://localhost web php tests/e2e-tests.php
+docker compose exec web php database/seed.php
 ```
 
 The unit tests cover the consultation steps, file type detection, path tricks, passwords, exam scoring, rubrics and the Markdown renderer.
