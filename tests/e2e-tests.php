@@ -13,7 +13,7 @@
 
 define('ROOT', dirname(__DIR__));
 require ROOT . '/helpers/database.php';
-const BASE = 'http://127.0.0.1:8000';
+define('BASE', getenv('BASE_URL') ?: 'http://127.0.0.1:8000');
 
 $passed = 0;
 $failed = 0;

@@ -9,8 +9,8 @@ RUN docker-php-ext-install pdo_mysql
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
  && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
- && printf 'ServerTokens Prod\nServerSignature Off\n' > /etc/apache2/conf-available/hide-version.conf \
- && a2enconf hide-version
+ && printf 'ServerTokens Prod\nServerSignature Off\n' > /etc/apache2/conf-available/zz-hide-version.conf \
+ && a2enconf zz-hide-version
 
 # Production PHP settings (no error details on screen), with upload limits just above the app's 10 MB.
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" \
